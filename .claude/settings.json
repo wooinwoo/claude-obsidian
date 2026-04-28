@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(/mnt/c/users/rst010/documents/obsidian vault/**)",
+      "Edit(/mnt/c/users/rst010/documents/obsidian vault/**)",
+      "Write(/mnt/c/users/rst010/documents/obsidian vault/**)",
+      "Bash(date:*)",
+      "Bash(git status:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git pull:*)",
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git checkout:*)"
+    ]
+  }
+}

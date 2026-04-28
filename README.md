@@ -7,13 +7,20 @@ Claude Code skills and commands for Obsidian vault management.
 ## 구성
 
 ```
-skills/obsidian/SKILL.md     자연어 트리거 스킬 (옵시디언/볼트/메모 등)
-commands/
-  daily.md                   /daily — 오늘 데일리 보장 + carry-over
-  note.md                    /note <주제> — 새 노트 생성
-  vault-sync.md              /vault-sync — git commit/push
-  vault-status.md            /vault-status — 볼트 현황 한눈에
+.claude/
+├── skills/obsidian/SKILL.md   자연어 트리거 스킬
+├── commands/
+│   ├── daily.md               /daily — 오늘 데일리 보장 + carry-over
+│   ├── note.md                /note <주제> — 새 노트 생성
+│   ├── vault-sync.md          /vault-sync — git commit/push
+│   └── vault-status.md        /vault-status — 볼트 현황 한눈에
+└── settings.json              볼트 경로 권한
 ```
+
+레포가 통째로 `.claude/` 하위 구조라서:
+- 글로벌 사용: `~/.claude/skills`, `~/.claude/commands` 로 심링크
+- 프로젝트 한정: 어떤 프로젝트에 `.claude/`로 클론하면 그 안에서만 적용
+- 이 레포 자체에서 `claude` 켜도 자동 로드 (자기 자신을 사용)
 
 ## 볼트 구조
 
@@ -52,35 +59,17 @@ _templates/   Templater 템플릿 (daily / project / note)
 # 1. 클론
 git clone git@github.com:wooinwoo/claude-obsidian.git ~/projects/personal/claude-obsidian
 
-# 2. 심볼릭 링크
+# 2. 글로벌 심링크
 mkdir -p ~/.claude/skills ~/.claude/commands
-ln -s ~/projects/personal/claude-obsidian/skills/obsidian ~/.claude/skills/obsidian
-for f in ~/projects/personal/claude-obsidian/commands/*.md; do
+ln -s ~/projects/personal/claude-obsidian/.claude/skills/obsidian ~/.claude/skills/obsidian
+for f in ~/projects/personal/claude-obsidian/.claude/commands/*.md; do
   ln -s "$f" ~/.claude/commands/"$(basename "$f")"
 done
 
-# 3. ~/.claude/settings.json 에 permissions 추가 (아래 참고)
+# 3. settings.json 권한 병합
+#    ~/.claude/settings.json 의 permissions.allow 에
+#    레포의 .claude/settings.json 내용을 병합 (볼트 경로는 머신에 맞게 수정)
 ```
-
-## settings.json 추가분
-
-`~/.claude/settings.json` 의 `permissions.allow` 에 다음 항목 병합:
-
-```json
-{
-  "permissions": {
-    "allow": [
-      "Read(/mnt/c/Users/rst010/Documents/Obsidian Vault/**)",
-      "Edit(/mnt/c/Users/rst010/Documents/Obsidian Vault/**)",
-      "Write(/mnt/c/Users/rst010/Documents/Obsidian Vault/**)",
-      "Bash(date:*)",
-      "Bash(git -C /mnt/c/Users/rst010/Documents/Obsidian\\ Vault *)"
-    ]
-  }
-}
-```
-
-볼트 경로가 다른 머신은 그 경로로 치환.
 
 ## 스킬 트리거
 
@@ -100,3 +89,9 @@ cd ~/projects/personal/claude-obsidian && git pull
 ```
 
 심볼릭 링크라서 즉시 반영.
+
+## 커스터마이징
+
+- 볼트 경로가 다른 머신: `.claude/skills/obsidian/SKILL.md` 와 `.claude/settings.json` 의 경로를 수정.
+- 새 슬래시 커맨드 추가: `.claude/commands/<이름>.md` 작성, 글로벌 심링크 추가.
+- 스킬 동작 수정: `.claude/skills/obsidian/SKILL.md` 편집 (심링크라 즉시 반영).
